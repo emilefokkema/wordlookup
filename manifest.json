@@ -1,0 +1,20 @@
+{
+	"name":"Lookup",
+	"description":"make words uplookable",
+	"version":"2.0",
+	"permissions":[
+		"activeTab",
+		 "tabs",
+        "notifications",
+        "http://*/",
+        "https://*/"
+	],
+	"background":{
+		"scripts":["background.js"],
+		"persistent":false
+	},
+	"browser_action":{
+		"default_title":"make words uplookable"
+	},
+	"manifest_version":2
+}
