@@ -16,7 +16,7 @@
 		});
 	var node;
 	var replaceNodeText = function(node){
-		var words = node.innerText.match(/[0-9a-zñáéíóúü]+|[\s,:;?!]+/ig);
+		var words = node.innerText.match(/[0-9a-zñáéíóúü]+|[\s,:;?!\.—()"'\u2018\u2019\u201c\u201d]+/ig);
 		if(words != null){
 			var spans = words.map(function(m){
 				var span = document.createElement('span');
