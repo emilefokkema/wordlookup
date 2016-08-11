@@ -14,7 +14,8 @@
 		"persistent":false
 	},
 	"browser_action":{
-		"default_title":"make words uplookable"
+		"default_title":"make words uplookable",
+		"dafault_popup":"dropdown.html"
 	},
 	"manifest_version":2
 }

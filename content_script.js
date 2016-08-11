@@ -1,6 +1,13 @@
 (function (window, document){
-	var containsOnlyTextAndLinks = function(node){
-		return Array.prototype.every.apply(node.childNodes, [function(n){return n.nodeName == "A" || n.nodeName == "#text";}]);
+	// "«»".split('').map(function(p){
+	// var n = p.charCodeAt(0); 
+	// return new Number(n).toString(16);})
+	var url = {
+		es: function(word){return "http://www.wordreference.com/es/en/translation.asp?spen="+word.toLowerCase();},
+		it: function(word){return "http://www.wordreference.com/iten/"+word.toLowerCase();}
+	};
+	var containsOnlyText = function(node, level){
+		return Array.prototype.every.apply(node.childNodes, [function(n){return n.nodeName == "#text" || (level > 0 && containsOnlyText(n, level - 1));}]);
 	};
 	var it = document.createNodeIterator(
 		document.body,
@@ -8,30 +15,48 @@
 		{
 			acceptNode: function(node){
 				var name = node.nodeName.toLowerCase();
-				if(name != "script" && name != "noscript" && name != "style" && name!= "#text" &&name!="a"&& containsOnlyTextAndLinks(node)){
+				if(name != "script" && name != "noscript" && name != "style" && containsOnlyText(node,2) && !containsOnlyText(node.parentNode, 2)){
 					return NodeFilter.FILTER_ACCEPT;
 				}
 				
 			}
 		});
 	var node;
-	var replaceNodeText = function(node){
-		var words = node.innerText.match(/[0-9a-zñáéíóúü]+|[\s,:;?!\.—()"'\u2018\u2019\u201c\u201d]+/ig);
+	var replaceNodeText = function(node, url){
+		var children = Array.prototype.slice.apply(node.childNodes);
+		var newElements = [];
+		for(var i=0;i<children.length;i++){
+			if(children[i].nodeName == "#text"){
+				newElements = newElements.concat(makeSpans(children[i].data, url));
+			}else{
+				replaceNodeText(children[i], url);
+				newElements.push(children[i]);
+			}
+			node.removeChild(children[i]);
+		}
+		newElements.map(function(e){
+			node.appendChild(e);
+		});
+	};
+	var makeSpans = function(text, url){
+		var words = text.match(/[0-9a-zñáéíóúü\u00e0\u00e8\u00f9\u00ec\u00f2]+|[\s,:;?!\.\-—\u2013()"'\u2018\u2019\u201c\u201d\u00bf\u00ab\u00bb]+/ig);
+		var spans = [];
 		if(words != null){
-			var spans = words.map(function(m){
+			spans = words.map(function(m){
 				var span = document.createElement('span');
 				span.appendChild(document.createTextNode(m));
+				if(m.match(/[0-9a-zñáéíóúü]+/i)){
+					span.style.borderBottom = '1pt solid #bbb';
+				}
 				span.addEventListener('contextmenu',function(e){
 					e.preventDefault();
-					window.open('http://www.wordreference.com/es/en/translation.asp?spen='+m.toLowerCase());
+					window.open(url(m));
 					return false;
 				})
 				return span;
 			});
-			node.innerHTML = '';
-			spans.map(function(s){node.appendChild(s);});
 		}
-		
+		return spans;
 	};
 	var toDo = (function(){
 		var all = [];
@@ -41,12 +66,15 @@
 		f.add = function(g){all.push(g);}
 		return f;
 	})();
-	while(node = it.nextNode()){
-		toDo.add((function(n){
-			return function(){
-				replaceNodeText(n);
-			};
-		})(node));
-	}
-	toDo();
+	window.makeSpans = function(lang){
+		while(node = it.nextNode()){
+			toDo.add((function(n){
+				return function(){
+					replaceNodeText(n, url[lang]);
+				};
+			})(node));
+		}
+		toDo();
+	};
+
 })(window, document);
