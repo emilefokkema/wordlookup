@@ -1,14 +1,14 @@
 (function (window, document){
 	var containsOnlyTextAndLinks = function(node){
-		return node.childElementCount == 0;
+		return Array.prototype.every.apply(node.childNodes, [function(n){return n.nodeName == "A" || n.nodeName == "#text";}]);
 	};
 	var it = document.createNodeIterator(
 		document.body,
 		NodeFilter.SHOW_ELEMENT,
 		{
 			acceptNode: function(node){
-				var name = node.tagName.toLowerCase();
-				if(name != "script" && name != "noscript" && name != "style" && containsOnlyTextAndLinks(node)){
+				var name = node.nodeName.toLowerCase();
+				if(name != "script" && name != "noscript" && name != "style" && name!= "#text" &&name!="a"&& containsOnlyTextAndLinks(node)){
 					return NodeFilter.FILTER_ACCEPT;
 				}
 				
