@@ -2,6 +2,15 @@
 	// "«»".split('').map(function(p){
 	// var n = p.charCodeAt(0); 
 	// return new Number(n).toString(16);})
+	(function(){
+		var style = document.createElement('style');
+		style.appendChild(document.createTextNode(""));
+		document.head.appendChild(style);
+		style.sheet.insertRule(".lookupable:hover{border-bottom:1pt solid #bbb;'}");
+	})();
+	var wordPattern = "0-9a-zñáéíóúü\\u00e0\\u00e8\\u00f9\\u00ec\\u00f2";
+	var allRegex = new RegExp("["+wordPattern+"]+|[^"+wordPattern+"]+","ig");
+	var justWordRegex = new RegExp("["+wordPattern+"]+","i");
 	var url = {
 		es: function(word){return "http://www.wordreference.com/es/en/translation.asp?spen="+word.toLowerCase();},
 		it: function(word){return "http://www.wordreference.com/iten/"+word.toLowerCase();}
@@ -39,14 +48,14 @@
 		});
 	};
 	var makeSpans = function(text, url){
-		var words = text.match(/[0-9a-zñáéíóúü\u00e0\u00e8\u00f9\u00ec\u00f2]+|[\s,:;?!\.\-—\u2013()"'\u2018\u2019\u201c\u201d\u00bf\u00ab\u00bb]+/ig);
+		var words = text.match(allRegex);
 		var spans = [];
 		if(words != null){
 			spans = words.map(function(m){
 				var span = document.createElement('span');
 				span.appendChild(document.createTextNode(m));
-				if(m.match(/[0-9a-zñáéíóúü]+/i)){
-					span.style.borderBottom = '1pt solid #bbb';
+				if(m.match(justWordRegex)){
+					span.setAttribute('class','lookupable');
 				}
 				span.addEventListener('contextmenu',function(e){
 					e.preventDefault();
