@@ -22,12 +22,13 @@
 		document.head.appendChild(style);
 		style.sheet.insertRule(".lookupable:hover{border-bottom:1pt solid #bbb;'}");
 	})();
-	var wordPattern = "0-9a-zñáéíóúü\\u00e0\\u00e8\\u00f9\\u00ec\\u00f2";
+	var wordPattern = "0-9a-zñáéíóúü\\u00e7\\u00e0\\u00e8\\u00f9\\u00ec\\u00f2";
 	var allRegex = new RegExp("["+wordPattern+"]+|[^"+wordPattern+"]+","ig");
 	var justWordRegex = new RegExp("["+wordPattern+"]+","i");
 	var url = {
 		es: function(word){return "http://www.wordreference.com/es/en/translation.asp?spen="+word.toLowerCase();},
-		it: function(word){return "http://www.wordreference.com/iten/"+word.toLowerCase();}
+		it: function(word){return "http://www.wordreference.com/iten/"+word.toLowerCase();},
+		fr: function(word){return "http://www.wordreference.com/fren/"+word.toLowerCase();}
 	};
 	var containsOnlyText = function(node, level){
 		return Array.prototype.every.apply(node.childNodes, [function(n){return n.nodeName == "#text" || (level > 0 && containsOnlyText(n, level - 1));}]);
