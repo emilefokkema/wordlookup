@@ -2,6 +2,20 @@
 	// "«»".split('').map(function(p){
 	// var n = p.charCodeAt(0); 
 	// return new Number(n).toString(16);})
+	var wrWindow = (function(){
+		var iFrame = document.createElement('iframe');
+		iFrame.setAttribute('width','300');
+		iFrame.setAttribute('height','300');
+		iFrame.setAttribute('style','position:fixed;right:0px;bottom:0px');
+		iFrame.src="about:blank";
+		document.body.appendChild(iFrame);
+		var open = function(url){
+			iFrame.src = url;
+		};
+		return {
+			open:open
+		};
+	})();
 	(function(){
 		var style = document.createElement('style');
 		style.appendChild(document.createTextNode(""));
@@ -58,7 +72,7 @@
 					span.setAttribute('class','lookupable');
 					span.addEventListener('contextmenu',function(e){
 						e.preventDefault();
-						window.open(url(m));
+						wrWindow.open(url(m));
 						return false;
 					});
 				}
