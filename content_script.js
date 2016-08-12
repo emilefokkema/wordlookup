@@ -56,12 +56,12 @@
 				span.appendChild(document.createTextNode(m));
 				if(m.match(justWordRegex)){
 					span.setAttribute('class','lookupable');
+					span.addEventListener('contextmenu',function(e){
+						e.preventDefault();
+						window.open(url(m));
+						return false;
+					});
 				}
-				span.addEventListener('contextmenu',function(e){
-					e.preventDefault();
-					window.open(url(m));
-					return false;
-				})
 				return span;
 			});
 		}
