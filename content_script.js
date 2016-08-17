@@ -3,15 +3,24 @@
 	// var n = p.charCodeAt(0); 
 	// return new Number(n).toString(16);})
 	var wrWindow = (function(){
-		var iFrame = document.createElement('iframe');
-		iFrame.setAttribute('width','350');
-		iFrame.setAttribute('height','350');
-		iFrame.setAttribute('style','position:fixed;right:0px;bottom:0px');
-		iFrame.src="about:blank";
-		document.body.appendChild(iFrame);
-		var open = function(url){
-			iFrame.src = url;
-		};
+
+		var open;
+		if(window.location.protocol.indexOf("https") == -1){
+			var iFrame = document.createElement('iframe');
+			iFrame.setAttribute('width','350');
+			iFrame.setAttribute('height','350');
+			iFrame.setAttribute('style','position:fixed;right:0px;bottom:0px');
+			iFrame.src="about:blank";
+			document.body.appendChild(iFrame);
+			open = function(url){
+				iFrame.src = url;
+			};
+		}else{
+			open = function(url){
+				window.open(url);
+			};
+		}
+
 		return {
 			open:open
 		};
@@ -39,7 +48,7 @@
 		{
 			acceptNode: function(node){
 				var name = node.nodeName.toLowerCase();
-				if(name != "script" && name != "noscript" && name != "style" && containsOnlyText(node,2) && !containsOnlyText(node.parentNode, 2)){
+				if(name != "script" && name != "noscript" && name != "style" && containsOnlyText(node,3) && !containsOnlyText(node.parentNode, 3)){
 					return NodeFilter.FILTER_ACCEPT;
 				}
 				
