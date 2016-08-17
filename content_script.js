@@ -4,8 +4,8 @@
 	// return new Number(n).toString(16);})
 	var wrWindow = (function(){
 		var iFrame = document.createElement('iframe');
-		iFrame.setAttribute('width','300');
-		iFrame.setAttribute('height','300');
+		iFrame.setAttribute('width','350');
+		iFrame.setAttribute('height','350');
 		iFrame.setAttribute('style','position:fixed;right:0px;bottom:0px');
 		iFrame.src="about:blank";
 		document.body.appendChild(iFrame);
