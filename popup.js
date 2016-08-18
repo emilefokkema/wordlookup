@@ -4,7 +4,7 @@
 			file:'content_script.js'
 		},function(){
 			chrome.tabs.executeScript(null, {
-				code:'window.makeSpans("'+lang+'")'
+				code:'window.makeLookupable("'+lang+'")'
 			});
 		});
 		

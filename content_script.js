@@ -105,15 +105,19 @@
 		f.add = function(g){all.push(g);}
 		return f;
 	})();
-	window.makeSpans = function(lang){
-		while(node = it.nextNode()){
-			toDo.add((function(n){
-				return function(){
-					replaceNodeText(n, url[lang]);
-				};
-			})(node));
-		}
-		toDo();
-	};
+	if(window.makeLookupable){
+		window.makeLookupable = function(){};
+	}else{
+		window.makeLookupable = function(lang){
+			while(node = it.nextNode()){
+				toDo.add((function(n){
+					return function(){
+						replaceNodeText(n, url[lang]);
+					};
+				})(node));
+			}
+			toDo();
+		};
+	}
 
 })(window, document);
