@@ -32,11 +32,6 @@
 		document.head.appendChild(style);
 		style.sheet.insertRule(".lookupable-word:hover{border-bottom:1pt solid #bbb;'}", 0);
 	})();
-	var makeNewElement = (function(){
-		var result = function(){return document.createElement('lookupable');};
-
-		return result;
-	})();
 	var wordPattern = "0-9a-zñáéíóúü\\u00e7\\u00e0\\u00e8\\u00f9\\u00ec\\u00f2";
 	var allRegex = new RegExp("["+wordPattern+"]+|[^"+wordPattern+"]+","ig");
 	var justWordRegex = new RegExp("["+wordPattern+"]+","i");
@@ -82,7 +77,7 @@
 		var spans = [];
 		if(words != null){
 			spans = words.map(function(m){
-				var span = makeNewElement();
+				var span = document.createElement('lookupable');
 				span.appendChild(document.createTextNode(m));
 				if(m.match(justWordRegex)){
 					span.setAttribute('class','lookupable-word');
