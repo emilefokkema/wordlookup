@@ -25,12 +25,17 @@
 			open:open
 		};
 	})();
+
 	(function(){
 		var style = document.createElement('style');
 		style.appendChild(document.createTextNode(""));
 		document.head.appendChild(style);
-		style.sheet.insertRule(".lookupable{margin:0px !important;}", 0)
-		style.sheet.insertRule(".lookupable-word:hover{border-bottom:1pt solid #bbb;'}", 1);
+		style.sheet.insertRule(".lookupable-word:hover{border-bottom:1pt solid #bbb;'}", 0);
+	})();
+	var makeNewElement = (function(){
+		var result = function(){return document.createElement('lookupable');};
+
+		return result;
 	})();
 	var wordPattern = "0-9a-zñáéíóúü\\u00e7\\u00e0\\u00e8\\u00f9\\u00ec\\u00f2";
 	var allRegex = new RegExp("["+wordPattern+"]+|[^"+wordPattern+"]+","ig");
@@ -77,17 +82,15 @@
 		var spans = [];
 		if(words != null){
 			spans = words.map(function(m){
-				var span = document.createElement('span');
+				var span = makeNewElement();
 				span.appendChild(document.createTextNode(m));
 				if(m.match(justWordRegex)){
-					span.setAttribute('class','lookupable lookupable-word');
+					span.setAttribute('class','lookupable-word');
 					span.addEventListener('contextmenu',function(e){
 						e.preventDefault();
 						wrWindow.open(url(m));
 						return false;
 					});
-				}else{
-					span.setAttribute('class','lookupable');
 				}
 				return span;
 			});
