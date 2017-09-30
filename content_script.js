@@ -1,8 +1,5 @@
 (function (window, document){
-	// "«»".split('').map(function(p){
-	// var n = p.charCodeAt(0); 
-	// return new Number(n).toString(16);})
-	var wrWindow = (function(){
+	var getWrWindow = function(){
 
 		var open;
 		if(window.location.protocol.indexOf("https") == -1){
@@ -24,14 +21,14 @@
 		return {
 			open:open
 		};
-	})();
+	};
 
-	(function(){
+	var insertStyleSheet = function(){
 		var style = document.createElement('style');
 		style.appendChild(document.createTextNode(""));
 		document.head.appendChild(style);
 		style.sheet.insertRule(".lookupable-word:hover{border-bottom:1pt solid #bbb;'}", 0);
-	})();
+	};
 	var wordPattern = "0-9a-zñáéíóúü\\u00e7\\u00e0\\u00e8\\u00f9\\u00ec\\u00f2";
 	var allRegex = new RegExp("["+wordPattern+"]+|[^"+wordPattern+"]+","ig");
 	var justWordRegex = new RegExp("["+wordPattern+"]+","i");
@@ -56,14 +53,14 @@
 			}
 		});
 	var node;
-	var replaceNodeText = function(node, url){
+	var replaceNodeText = function(node, url, wrWindow){
 		var children = Array.prototype.slice.apply(node.childNodes);
 		var newElements = [];
 		for(var i=0;i<children.length;i++){
 			if(children[i].nodeName == "#text"){
-				newElements = newElements.concat(makeSpans(children[i].data, url));
+				newElements = newElements.concat(makeSpans(children[i].data, url, wrWindow));
 			}else{
-				replaceNodeText(children[i], url);
+				replaceNodeText(children[i], url, wrWindow);
 				newElements.push(children[i]);
 			}
 			node.removeChild(children[i]);
@@ -72,7 +69,7 @@
 			node.appendChild(e);
 		});
 	};
-	var makeSpans = function(text, url){
+	var makeSpans = function(text, url, wrWindow){
 		var words = text.match(allRegex);
 		var spans = [];
 		if(words != null){
@@ -100,19 +97,18 @@
 		f.add = function(g){all.push(g);}
 		return f;
 	})();
-	if(window.makeLookupable){
-		window.makeLookupable = function(){};
-	}else{
-		window.makeLookupable = function(lang){
-			while(node = it.nextNode()){
-				toDo.add((function(n){
-					return function(){
-						replaceNodeText(n, url[lang]);
-					};
-				})(node));
-			}
-			toDo();
-		};
-	}
+	var makeLookupable = function(lang){
+		var wrWindow = getWrWindow();
+		insertStyleSheet();
+		while(node = it.nextNode()){
+			toDo.add((function(n){
+				return function(){
+					replaceNodeText(n, url[lang], wrWindow);
+				};
+			})(node));
+		}
+		toDo();
+	};
+	window.makeLookupable = (!window.makeLookupable && makeLookupable) || function(){};
 
 })(window, document);
