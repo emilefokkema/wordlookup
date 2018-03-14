@@ -1,23 +1,51 @@
 (function (window, document){
 	var getWrWindow = function(){
-
-		var open;
-		if(window.location.protocol.indexOf("https") == -1){
+		var iFrame = null;
+		var openedWindow = null;
+		var makeIframe = function(){
 			var iFrame = document.createElement('iframe');
 			iFrame.setAttribute('width','350');
 			iFrame.setAttribute('height','350');
 			iFrame.setAttribute('style','position:fixed;right:0px;bottom:0px');
 			iFrame.src="about:blank";
 			document.body.appendChild(iFrame);
-			open = function(url){
+			return iFrame;
+		};
+		var iFrameIsLoadable = function(url, onYes, onNo){
+			var req = new XMLHttpRequest();
+			req.open("GET", url);
+			req.onerror = function(e){
+				onNo();
+			};
+			req.onload = function(){
+				onYes();
+			};
+			req.send();
+		};
+		
+		var open = function(url){
+			if(iFrame == null && openedWindow == null){
+				iFrameIsLoadable(
+					url,
+					function(){
+						console.log("iframe is loadable");
+						iFrame = makeIframe();
+						iFrame.src = url;
+					},
+					function(){
+						console.log("iframe is not loadable");
+						openedWindow = window.open(url);
+					}
+					);
+				return;
+			}
+			if(iFrame != null){
 				iFrame.src = url;
-			};
-		}else{
-			open = function(url){
-				window.open(url);
-			};
-		}
-
+				return;
+			}
+			openedWindow = window.open(url);
+		};
+		
 		return {
 			open:open
 		};
