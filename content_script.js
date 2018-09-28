@@ -43,6 +43,9 @@
 				iFrame.src = url;
 				return;
 			}
+			if(openedWindow){
+				openedWindow.close();
+			}
 			openedWindow = window.open(url);
 		};
 		
