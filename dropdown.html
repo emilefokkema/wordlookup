@@ -13,14 +13,22 @@
 		background-color:#fff;
 		height:40px;
 		width:150px;
-		cursor: pointer;
 	}
-	div:hover{
+	.inactive div:hover{
 		background-color: #aaa;
 		color:#fff;
 	}
+	.inactive div{
+		cursor: pointer;
+	}
+	div.active{
+		background-color:#aaf;
+	}
+	div.inactive{
+		color:#aaa;
+	}
 </style></head>
-<body>
+<body class="inactive">
 	
 <div id="es">ES</div>
 <div id="it">IT</div>

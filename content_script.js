@@ -1,4 +1,5 @@
 (function (window, document){
+	var extensionStatus = {};
 	var getWrWindow = function(){
 		var iFrame = null;
 		var openedWindow = null;
@@ -130,6 +131,7 @@
 		return f;
 	})();
 	var makeLookupable = function(lang){
+		extensionStatus.lang = lang;
 		var wrWindow = getWrWindow();
 		insertStyleSheet();
 		while(node = it.nextNode()){
@@ -140,7 +142,16 @@
 			})(node));
 		}
 		toDo();
+		extensionStatus.status = "done";
+		sendStatus();
+	};
+	var sendStatus = function(){
+		chrome.runtime.sendMessage(extensionStatus);
 	};
 	window.makeLookupable = (!window.makeLookupable && makeLookupable) || function(){};
-
+	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
+		if(request.popupOpened){
+			sendResponse(extensionStatus);
+		}
+	});
 })(window, document);
