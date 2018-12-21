@@ -12,4 +12,5 @@
 	document.getElementById("es").addEventListener("click",function(){doIt("es");});
 	document.getElementById("it").addEventListener("click",function(){doIt("it");});
 	document.getElementById("fr").addEventListener("click",function(){doIt("fr");});
+	document.getElementById("de").addEventListener("click",function(){doIt("de");});
 })();
